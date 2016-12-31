@@ -1,0 +1,23 @@
+#frame {
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    bottom: 0px;
+    margin: auto;
+    position: fixed;
+    overflow: hidden;
+}
+
+@media(min-aspect-ratio: 1/1) {
+    #frame {
+        width: 100vh !important;
+        height: 100vh !important;
+    }
+}
+
+@media(max-aspect-ratio: 1/1) {
+    #frame {
+        width: 100vw !important;
+        height: 100vw !important;
+    }
+}
