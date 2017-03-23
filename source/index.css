@@ -1,11 +1,8 @@
 @import "./styles/Frame.css";
 
 * {
-    padding: 0px;
-    margin: 0px;
     cursor: default;
     user-select: none;
-    box-sizing: border-box;
     image-rendering: pixelated;
 }
 
