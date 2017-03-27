@@ -49,7 +49,7 @@ export default class Microgame extends Pixi.Container {
     // instantiating this
     // microgame. Just a
     // bit of sugar.
-    static create() {
+    static instantiate() {
         return new this()
     }
 }

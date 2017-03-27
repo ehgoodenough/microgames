@@ -19,7 +19,7 @@ export default class Game extends Pixi.Container {
 
         // this.microgames = Lodash.shuffle(this.microgames)
 
-        this.microgame = this.microgames[0].create()
+        this.microgame = this.microgames[0].instantiate()
         this.addChild(this.microgame)
     }
     update(delta) {
