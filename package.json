@@ -12,6 +12,7 @@
     "@ehgoodenough/pixi.js": "^4.4.3-2",
     "fpsmeter": "^0.3.1",
     "keyb": "^1.1.0",
+    "lodash": "^4.17.4",
     "shortid": "^2.2.6",
     "statgrab": "^1.2.0",
     "yaafloop": "^1.0.0"

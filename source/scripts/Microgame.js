@@ -2,15 +2,35 @@ import Pixi from "@ehgoodenough/pixi.js"
 
 export default class Microgame extends Pixi.Container {
     constructor() {
-        super()
+        super(null)
+
+        this.timer = 5 * 1000
     }
 
     // A method that is called
     // with each frame of the game.
-    // You should override this with
-    // your own gameplay functionality.
+    // You should extend this method
+    // with your gameplay functionality.
     update(delta) {
-        // ...
+        // Decrement the timer.
+        this.timer -= delta.ms
+
+        // Check if the timer
+        // has reached zero.
+        if(this.timer <= 0) {
+            // If it has, then
+            // end the microgame.
+            console.log("Game Over")
+        }
+
+        // Iterate through all the
+        // elements in the game, and
+        // update them.
+        this.children.forEach((child) => {
+            if(child.update instanceof Function) {
+                child.update(delta)
+            }
+        })
     }
 
     // A static method that indicates
@@ -23,5 +43,13 @@ export default class Microgame extends Pixi.Container {
     // if you have that environment.
     static get isPlayable() {
         return true
+    }
+
+    // A static method for
+    // instantiating this
+    // microgame. Just a
+    // bit of sugar.
+    static create() {
+        return new this()
     }
 }
