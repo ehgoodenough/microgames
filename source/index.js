@@ -10,7 +10,7 @@ var frame = document.getElementById("frame")
 //////////////////////
 
 Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST
-Pixi.renderer = Pixi.autoDetectRenderer(320, 320, {transparent: true})
+Pixi.renderer = Pixi.autoDetectRenderer(160, 160, {transparent: true})
 Pixi.render = Pixi.renderer.render.bind(Pixi.renderer)
 
 frame.appendChild(Pixi.renderer.view)
@@ -42,7 +42,7 @@ var loop = new Yaafloop(function(delta) {
     game.update(delta)
 
     Pixi.render(game)
-    
+
     if(!!meter) {
         meter.tick()
     }
