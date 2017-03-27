@@ -1,7 +1,7 @@
-import * as Pixi from "pixi.js"
-import Yaafloop from "yaafloop"
-import Statgrab from "statgrab/do"
+import Pixi from "@ehgoodenough/pixi.js"
 import FPSmeter from "fpsmeter"
+import Statgrab from "statgrab/do"
+import Yaafloop from "yaafloop"
 
 var frame = document.getElementById("frame")
 

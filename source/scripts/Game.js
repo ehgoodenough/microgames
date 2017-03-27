@@ -1,4 +1,4 @@
-import * as Pixi from "pixi.js"
+import Pixi from "@ehgoodenough/pixi.js"
 
 import NothingMicrogame from "scripts/NothingMicrogame.js"
 

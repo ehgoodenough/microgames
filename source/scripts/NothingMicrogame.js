@@ -1,4 +1,4 @@
-import * as Pixi from "pixi.js"
+import Pixi from "@ehgoodenough/pixi.js"
 import Microgame from "scripts/Microgame.js"
 
 export default class NothingMicrogame extends Microgame {
