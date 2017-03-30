@@ -24,7 +24,7 @@ class Frog extends Pixi.Sprite {
         
         this.interactive = true
         this.on("mousedown", (event) => {
-            this.parent.timer = 0
+            this.parent.timer.duration = 0
             this.state = "fail"
             this.rotation = Math.PI / 12
         })

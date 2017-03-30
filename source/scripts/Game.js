@@ -7,16 +7,22 @@ var MICROGAMES = [
     DontTouchMicrogame
 ]
 
-// this.microgames = Lodash.shuffle(this.microgames)
-// this.microgames = this.microgames.filter((microgame) => {
+// MICROGAMES = Lodash.shuffle(MICROGAMES)
+// MICROGAMES = MICROGAMES.filter((microgame) => {
 //     return microgame.isPlayable
 // })
+
+const WIDTH = 90
+const HEIGHT = 160
+const WAIT = 500
 
 export default class Game extends Pixi.Container {
     constructor() {
         super()
 
-        this.renderer = Pixi.autoDetectRenderer(90, 160, {transparent: true})
+        this.renderer = Pixi.autoDetectRenderer(WIDTH, HEIGHT, {
+            transparent: true
+        })
 
         this.startMicrogame()
     }
@@ -24,7 +30,7 @@ export default class Game extends Pixi.Container {
         if(this.microgame != undefined) {
 
             if(this.microgame.hasEnded) {
-                if(this.microgame.timer <= -1000) {
+                if(this.microgame.timer.duration <= -1 * WAIT) {
                     this.startMicrogame()
                 }
             }
