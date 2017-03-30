@@ -20,7 +20,10 @@ export default class Microgame extends Pixi.Container {
         if(this.timer <= 0) {
             // If it has, then
             // end the microgame.
-            console.log("Game Over")
+            if(this.hasEnded != true) {
+                this.hasEnded = true
+                this.end()
+            }
         }
 
         // Iterate through all the
@@ -51,5 +54,9 @@ export default class Microgame extends Pixi.Container {
     // bit of sugar.
     static instantiate() {
         return new this()
+    }
+
+    end() {
+        return
     }
 }
