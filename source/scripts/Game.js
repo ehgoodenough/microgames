@@ -22,13 +22,14 @@ export default class Game extends Pixi.Container {
     }
     update(delta) {
         if(this.microgame != undefined) {
-            this.microgame.update(delta)
 
             if(this.microgame.hasEnded) {
                 if(this.microgame.timer <= -1000) {
                     this.startMicrogame()
                 }
             }
+
+            this.microgame.update(delta)
         }
     }
     render() {

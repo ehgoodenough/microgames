@@ -5,6 +5,9 @@ export default class Microgame extends Pixi.Container {
         super(null)
 
         this.timer = 5 * 1000
+        this.maxtimer = 5 * 1000
+
+        this.addChild(new Timer())
     }
 
     // A method that is called
@@ -58,5 +61,27 @@ export default class Microgame extends Pixi.Container {
 
     end() {
         return
+    }
+}
+
+const FRAME = 160
+
+class Timer extends Pixi.Sprite {
+    constructor() {
+        super(Pixi.Texture.fromImage(Timer.image))
+
+        this.anchor.x = 0
+        this.anchor.y = 1
+
+        this.position.y = FRAME
+
+        this.scale.x = FRAME
+        this.scale.y = 4
+    }
+    static get image() {
+        return require("images/pixel.png")
+    }
+    update(delta) {
+        this.width = Math.max((this.parent.timer / this.parent.maxtimer) * FRAME, 0)
     }
 }
