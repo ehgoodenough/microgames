@@ -9,7 +9,7 @@
     "url": "https://github.com/ehgoodenough/microgames"
   },
   "dependencies": {
-    "@ehgoodenough/pixi.js": "^4.4.3-2",
+    "@ehgoodenough/pixi.js": "^4.4.3-6",
     "fpsmeter": "^0.3.1",
     "keyb": "^1.1.0",
     "shortid": "^2.2.6",

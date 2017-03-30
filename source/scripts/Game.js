@@ -3,23 +3,22 @@ Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST
 
 import NothingMicrogame from "scripts/NothingMicrogame.js"
 
+var MICROGAMES = [
+    NothingMicrogame
+]
+
 export default class Game extends Pixi.Container {
     constructor() {
         super()
 
         this.renderer = Pixi.autoDetectRenderer(160, 160, {transparent: true})
 
-        this.microgames = [
-            NothingMicrogame
-        ]
-
-        this.microgames = this.microgames.filter((microgame) => {
-            return microgame.isPlayable
-        })
-
         // this.microgames = Lodash.shuffle(this.microgames)
+        // this.microgames = this.microgames.filter((microgame) => {
+        //     return microgame.isPlayable
+        // })
 
-        this.microgame = this.microgames[0].instantiate()
+        this.microgame = MICROGAMES[0].instantiate()
         this.addChild(this.microgame)
     }
     update(delta) {
