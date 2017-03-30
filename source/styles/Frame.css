@@ -8,16 +8,16 @@
     overflow: hidden;
 }
 
-@media(min-aspect-ratio: 1/1) {
+@media(min-aspect-ratio: 9/16) {
     #frame {
-        width: 100vh !important;
-        height: 100vh !important;
+        width: 56.25vh;
+        height: 100vh;
     }
 }
 
-@media(max-aspect-ratio: 1/1) {
+@media(max-aspect-ratio: 9/16) {
     #frame {
-        width: 100vw !important;
-        height: 100vw !important;
+        height: 177.778vw;
+        width: 100vw;
     }
 }

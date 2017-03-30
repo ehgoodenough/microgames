@@ -16,7 +16,7 @@ export default class Game extends Pixi.Container {
     constructor() {
         super()
 
-        this.renderer = Pixi.autoDetectRenderer(160, 160, {transparent: true})
+        this.renderer = Pixi.autoDetectRenderer(90, 160, {transparent: true})
 
         this.startMicrogame()
     }
