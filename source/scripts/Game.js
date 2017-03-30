@@ -1,10 +1,10 @@
 import Pixi from "@ehgoodenough/pixi.js"
 Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST
 
-import NothingMicrogame from "scripts/microgames/NothingMicrogame.js"
+import DontTouchMicrogame from "scripts/microgames/DontTouchMicrogame.js"
 
 var MICROGAMES = [
-    NothingMicrogame
+    DontTouchMicrogame
 ]
 
 // this.microgames = Lodash.shuffle(this.microgames)
