@@ -33,8 +33,7 @@ class Art extends Pixi.Sprite {
         this.interactive = true
         this.on("mousedown", this.interact)
         this.on("touchstart", this.interact)
-    }
-    update(delta) {
+        
         this.position.x = Frame.width / 2
         this.position.y = Frame.height / 2
     }
@@ -46,10 +45,10 @@ class Art extends Pixi.Sprite {
         ]
     }
     interact(event) {
-        this.rotation = Math.PI / 12
-        this.state = "fail"
-
         if(this.parent.hasEnded != true) {
+            this.rotation = Math.PI / 12
+            this.state = "fail"
+        
             this.parent.hasEnded = true
             this.parent.timer.duration = 0
         }

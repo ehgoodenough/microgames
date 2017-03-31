@@ -44,4 +44,12 @@ export default class Microgame extends Pixi.Container {
     end() {
         return
     }
+    
+    get isDone() {
+        return this.timer.duration <= -1 * this.wait
+    }
+    
+    get wait() {
+        return 500
+    }
 }
