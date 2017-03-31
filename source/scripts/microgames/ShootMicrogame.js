@@ -1,21 +1,33 @@
-
-
 import Pixi from "@ehgoodenough/pixi.js"
 import Microgame from "scripts/microgames/Microgame.js"
 import Frame from "scripts/Frame.js"
+import Timer from "scripts/Timer.js"
 
-export default class RunMicrogame extends Microgame {
+export default class ShootMicrogame extends Microgame {
     constructor(stage = new Number()) {
         super()
 
-        this.addChild(new Defender(stage))
+        this.addChild(new Background())
+
+        for(var i = 0; i < 50; i += 1) {
+            this.addChild(new Star(i))
+        }
+
+        this.addChild(this.defender = new Defender(stage))
+
         this.addChild(new Invader(stage, 0))
         this.addChild(new Invader(stage, 1))
         this.addChild(new Invader(stage, 2))
-        this.addChildAt(new Background(), 0)
+
+        this.addChild(this.timer = new Timer())
+
+        this.score = 0
     }
     timeout() {
-        this.state = "pass"
+        this.state = "fail"
+    }
+    get wait() {
+        return this.state == "pass" ? 2000 : 500
     }
 }
 
@@ -50,11 +62,11 @@ class Invader extends Pixi.Sprite {
         this.position.y = 16
 
         if(index == 0) {
-            this.speed = 0.75
+            this.speed = 0.8
         } else if(index == 1) {
-            this.speed = 0.25
+            this.speed = 0.4
         } else if(index == 2) {
-            this.speed = 0.5
+            this.speed = 0.6
         }
     }
     update(delta) {
@@ -80,24 +92,36 @@ class Defender extends Pixi.Sprite {
         this.speed = 1
     }
     update(delta) {
-        if(this.velocity.x === 0) {
-            this.velocity.x = -1 * this.speed
+        if(this.parent.hasEnded) {
+
+            if(this.parent.state == "pass") {
+                if(this.parent.timer.duration < -500) {
+                    this.position.y -= this.speed * 5
+                }
+            }
+
+            this.rotation = 0
+            this.tint = 0xFFFFFF
+        } else {
+            if(this.velocity.x === 0) {
+                this.velocity.x = -1 * this.speed
+            }
+
+            if(this.position.x + this.velocity.x > Frame.width - 16
+            || this.position.x + this.velocity.x < 0 + 16) {
+                this.velocity.x *= -1
+            }
+
+            this.position.x += this.velocity.x
+
+            this.recharging -= delta.ms
+            if(this.recharging < 0) {
+                this.recharging = 0
+            }
+
+            this.rotation = (this.recharging / this.maxrecharging) * 2 * Math.PI
+            this.tint = this.recharging > 0 ? 0x888888 : 0xFFFFFF
         }
-
-        if(this.position.x + this.velocity.x > Frame.width - 16
-        || this.position.x + this.velocity.x < 0 + 16) {
-            this.velocity.x *= -1
-        }
-
-        this.position.x += this.velocity.x
-
-        this.recharging -= delta.ms
-        if(this.recharging < 0) {
-            this.recharging = 0
-        }
-
-        this.rotation = (this.recharging / this.maxrecharging) * 2 * Math.PI
-        this.tint = this.recharging > 0 ? 0x888888 : 0xFFFFFF
     }
     send(message) {
         if(message == "click") {
@@ -132,12 +156,56 @@ class Projectile extends Pixi.Sprite {
 
         this.parent.children.forEach((child) => {
             if(child instanceof Invader) {
-                if(getDistance(this.position, child.position) < 15) {
+                if(getDistance(this.position, child.position) < 18) {
+
+                    this.parent.score += 1
+                    if(this.parent.score == 3) {
+                        if(this.parent.hasEnded != true) {
+                            this.parent.state = "pass"
+                            this.parent.hasEnded = true
+                            this.parent.timer.duration = 0
+                        }
+                    }
+
                     this.parent.removeChild(child)
                     this.parent.removeChild(this)
                 }
             }
         })
+    }
+}
+
+class Star extends Pixi.Sprite {
+    constructor(index) {
+        super(Pixi.Texture.fromImage(require("images/pixel.png")))
+
+        var color = Star.colors[Math.floor(Math.random() * Star.colors.length)]
+        this.tint = color
+
+        this.scale.x = 1
+        this.scale.y = 1
+
+        this.position.x = Math.random() * Frame.width
+        this.position.y = Math.random() * Frame.height
+
+        this.speed = Math.random() * 2
+    }
+    update(delta) {
+        this.position.y += this.speed * delta.f
+
+        if(this.position.y > Frame.height) {
+            this.position.y -= Frame.height
+            this.position.x = Math.random() * Frame.width
+        }
+    }
+    static get colors() {
+        return [
+            0xE5E4E2,
+            0xC44040,
+            0xD89000,
+            0x339D33,
+            0x4A508A
+        ]
     }
 }
 
