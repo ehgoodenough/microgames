@@ -8,14 +8,18 @@ export default class RunMicrogame extends Microgame {
     constructor(stage = new Number()) {
         super()
 
-        this.addChild(new Background1())
-        this.addChild(new Background2())
-        this.addChild(new Floor({x: 0}))
-        this.addChild(new Floor({x: 100}))
-        this.addChild(new Floor({x: 250}))
-        this.addChild(new Floor({x: 400}))
-        this.addChild(new Floor({x: 550}))
-        this.addChild(new Floor({x: 650}))
+        this.addChild(new Background1(stage))
+        this.addChild(new Background2(stage))
+        this.addChild(new Floor({x: 0}, stage))
+        this.addChild(new Floor({x: 100}, stage))
+        this.addChild(new Floor({x: 250}, stage))
+        this.addChild(new Floor({x: 400}, stage))
+        this.addChild(new Floor({x: 550}, stage))
+        this.addChild(new Floor({x: 650}, stage))
+        this.addChild(new Floor({x: 800}, stage))
+        this.addChild(new Floor({x: 900}, stage))
+        this.addChild(new Floor({x: 1000}, stage))
+        this.addChild(new Floor({x: 1100}, stage))
         this.addChild(new Runner(stage))
 
         this.addChild(this.timer = new Timer())
@@ -49,7 +53,7 @@ class Background1 extends Pixi.Sprite {
 }
 
 class Background2 extends Pixi.Sprite {
-    constructor() {
+    constructor(stage = new Number()) {
         super(Pixi.Texture.fromImage(require("images/run.background.2.png")))
 
         this.anchor.x = 0
@@ -65,7 +69,7 @@ class Background2 extends Pixi.Sprite {
 }
 
 class Floor extends Pixi.Sprite {
-    constructor(that) {
+    constructor(that, stage = new Number()) {
         super(Pixi.Texture.fromImage(require("images/run.floor.png")))
 
         this.anchor.x = 0
@@ -74,7 +78,7 @@ class Floor extends Pixi.Sprite {
         this.position.x = that.x || 0
         this.position.y = Frame.height
 
-        this.speed = that.speed || 2
+        this.speed = 2 + stage
         this.isPermeable = true
     }
     update(delta) {
@@ -125,7 +129,7 @@ class Runner extends Pixi.Sprite {
         this.position.y += this.velocity.y * delta.f
 
         if(this.position.y > Frame.height + this.height) {
-            this.state = "fail"
+            this.parent.state = "fail"
 
             if(this.parent.hasEnded != true) {
                 this.parent.hasEnded = true

@@ -10,17 +10,17 @@ import Frame from "scripts/Frame.js"
 const WOOT_GREEN = 0x66963F
 
 var MICROGAMES = [
-    DontTouchMicrogame,
+    PopMicrogame,
     RunMicrogame,
     ShootMicrogame,
-    PopMicrogame,
+    DontTouchMicrogame,
 ]
 
 var music = null
 if(music == null) {
     require(["music/Quirky Dog.mp3"], (source) => {
         music = new Audio(source)
-        music.volume = 0.5
+        music.volume = STAGE == "DEVELOPMENT" ? 0 : 0.25
         music.loop = true
         music.play()
     })
@@ -36,16 +36,25 @@ export default class Game extends Pixi.Container {
             transparent: true
         })
         
-        this.addChild(this.leftdoor = new ElevatorDoor())
-        this.addChild(this.rightdoor = new ElevatorDoor())
+        this.addChild(this.leftdoor = new ElevatorDoor("left"))
+        this.addChild(this.rightdoor = new ElevatorDoor("right"))
         this.addChild(this.elevator = new Elevator())
         
-        this.addChild(this.prompt = new Pixi.Text("DON'T\nTOUCH", {
+        this.addChild(this.prompt = new Pixi.Text("", {
             "fontFamily": "Arial", "fontSize": "30px", "fontWeight": "bold",
             "align": "center", "fill": WOOT_GREEN, "stroke": 0x111111, "strokeThickness": 5
         }))
         this.prompt.position.x = Frame.width / 2
         this.prompt.position.y = Frame.height / 2
+        
+        this.addChild(this.faster = new Pixi.Text("", {
+            "fontFamily": "Arial", "fontSize": "50px", "fontWeight": "bold",
+            "align": "center", "fill": WOOT_GREEN, "stroke": 0x111111, "strokeThickness": 5
+        }))
+        this.faster.rotation = Math.PI / 4
+        this.faster.position.x = Frame.width / 2
+        this.faster.position.y = Frame.height / 2
+        this.flashing = 0
         
         this.leftdoor.anchor.x = 1
         this.leftdoor.position.x = 0
@@ -62,6 +71,9 @@ export default class Game extends Pixi.Container {
         if(this.elevator.isActive == false) {
             this.microgame.update(delta)
         }
+        
+        this.flashing += delta.ms
+        this.faster.position.x = Math.floor(this.flashing / 100) % 2 == 0 ? Frame.width / 2 : 1000
     }
     render() {
         this.renderer.render(this)
@@ -78,10 +90,6 @@ export default class Game extends Pixi.Container {
             // TODO: randomly shuffle
 
             this.stage = isNaN(this.stage) ? 0 : this.stage + 1
-            
-            if(!!music) {
-                music.playbackRate = 1 + (this.stage * 0.5)
-            }
         }
 
         var Microgame = this.microgames.shift()
@@ -101,9 +109,6 @@ class Elevator extends Pixi.Sprite {
         this.isActive = false
         this.scale.x = 2.5
         this.scale.y = 2.5
-        // this.isActive = true
-        // this.scale.x = 1
-        // this.scale.y = 1
         
         this.speed = 0.05
         
@@ -139,6 +144,11 @@ class Elevator extends Pixi.Sprite {
                 // MAKE IT EITHER HAPPY OR SAD DEPENDNING
                 // ON THIS.MICROGAME.STATE
                 
+                var state = this.parent.microgame.state || "pass"
+                
+                this.parent.leftdoor.texture = DOORS["left"][state]
+                this.parent.rightdoor.texture = DOORS["right"][state]
+                
                 if(this.parent.leftdoor.anchor.x != 0
                 || this.parent.rightdoor.anchor.x != 1) {
                     if(this.parent.leftdoor.anchor.x > 0) {
@@ -155,14 +165,36 @@ class Elevator extends Pixi.Sprite {
                     }
                 } else {
                     if(!!music) {
-                        music.volume = 0.25
+                        // music.volume = 0.25
                     }
                     this.parent.microgame.timer.duration -= delta.ms
-                    if(this.parent.microgame.timer.duration < -1 * this.parent.microgame.wait - 500) {
+                    if(this.parent.microgames.length == 0) {
+                        
+                        if(this.parent.stage >= 2) {
+                            this.parent.faster.text = "YOU WIN!! :D"
+                            this.parent.microgame.timer.duration = -1 * this.parent.microgame.wait
+                            if(!!music) {
+                                music.playbackRate = 1
+                            }
+                        } else {
+                            this.parent.faster.text = "FASTER"
+                            
+                            if(this.parent.microgame.timer.duration < -1 * this.parent.microgame.wait - 1000) {
+                                this.parent.faster.text = ""
+                                if(!!music) {
+                                    music.playbackRate = 1 + ((this.parent.stage + 1) * 0.5)
+                                }
+                            }
+                        }
+                    }
+                    
+                    var extrawait = this.parent.microgames.length == 0 ? 2000 : 500
+                    if(this.parent.microgame.timer.duration < -1 * this.parent.microgame.wait - extrawait) {
                         this.parent.startMicrogame()
                         this.parent.prompt.text = (this.parent.microgame.prompt || "Do It").toUpperCase()
                         this.parent.prompt.position.x = 0 - (this.parent.prompt.width / 2)
                     }
+                    
                 }
             }
         } else {
@@ -170,7 +202,7 @@ class Elevator extends Pixi.Sprite {
                 this.parent.prompt.position.x += 5 * delta.f
             }
             if(!!music) {
-                music.volume = 0.5
+                // music.volume = 0.5
             }
             if(this.parent.leftdoor.anchor.x != 1
             || this.parent.rightdoor.anchor.x != 0) {
@@ -209,11 +241,25 @@ class Elevator extends Pixi.Sprite {
     }
 }
 
+var DOORS = {
+    left: {
+        pass: Pixi.Texture.fromImage(require("images/elevator.door.pass.1.png")),
+        fail: Pixi.Texture.fromImage(require("images/elevator.door.fail.1.png"))
+    },
+    right: {
+        pass: Pixi.Texture.fromImage(require("images/elevator.door.pass.2.png")),
+        fail: Pixi.Texture.fromImage(require("images/elevator.door.fail.2.png"))
+    }
+}
+
 class ElevatorDoor extends Pixi.Sprite {
-    constructor() {
-        super(Pixi.Texture.fromImage(require("images/pixel.png")))
-        this.scale.x = Frame.width / 2
-        this.scale.y = Frame.height
+    constructor(side = "left") {
+        super(DOORS[side]["pass"])
+        
+        this.side = side
+        
+        // this.scale.x = Frame.width / 2
+        // this.scale.y = Frame.height
         
         this.anchor.y = 0
     }

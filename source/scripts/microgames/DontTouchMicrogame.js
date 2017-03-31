@@ -5,13 +5,13 @@ import Microgame from "scripts/microgames/Microgame.js"
 import Timer from "scripts/Timer.js"
 
 export default class DontTouchMicrogame extends Microgame {
-    constructor(stage) {
+    constructor(stage = new Number) {
         super()
         
         this.addChild(new Background())
         this.addChild(new Art(stage))
 
-        this.addChild(this.timer = new Timer())
+        this.addChild(this.timer = new Timer((4 - stage) * 1000))
         
         this.sounds = {
             "no": new Audio(require("sounds/noooooOOOO.wav")),
@@ -61,7 +61,7 @@ class Art extends Pixi.Sprite {
     interact(event) {
         if(this.parent.hasEnded != true) {
             this.rotation = Math.PI / 12
-            this.state = "fail"
+            this.parent.state = "fail"
             
             if(this.parent.sounds) {
                 this.parent.sounds.no.currentTime = 0
