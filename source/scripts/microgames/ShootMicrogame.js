@@ -45,12 +45,14 @@ class Background extends Pixi.Sprite {
         this.scale.y = Frame.height
 
         this.interactive = true
-        this.on("mousedown", (event) => {
-            this.parent.children.forEach((child) => {
-                if(child.send instanceof Function) {
-                    child.send("click")
-                }
-            })
+        this.on("mousedown", this.interact)
+        this.on("touchstart", this.interact)
+    }
+    interact() {
+        this.parent.children.forEach((child) => {
+            if(child.send instanceof Function) {
+                child.send("interact")
+            }
         })
     }
 }
@@ -125,7 +127,7 @@ class Defender extends Pixi.Sprite {
         }
     }
     send(message) {
-        if(message == "click") {
+        if(message == "interact") {
             if(this.recharging === 0) {
                 this.recharging = this.maxrecharging
                 this.parent.addChild(new Projectile({

@@ -33,12 +33,14 @@ class Background1 extends Pixi.Sprite {
         this.anchor.y = 0
 
         this.interactive = true
-        this.on("mousedown", (event) => {
-            this.parent.children.forEach((child) => {
-                if(child.send instanceof Function) {
-                    child.send("click")
-                }
-            })
+        this.on("mousedown", this.interact)
+        this.on("touchstart", this.interact)
+    }
+    interact() {
+        this.parent.children.forEach((child) => {
+            if(child.send instanceof Function) {
+                child.send("interact")
+            }
         })
     }
 }
@@ -134,7 +136,7 @@ class Runner extends Pixi.Sprite {
         }
     }
     send(message) {
-        if(message == "click") {
+        if(message == "interact") {
             if(this.velocity.y == 0
             && this.position.y == Math.round(Frame.height * (2/3))) {
                 this.velocity.y = -10

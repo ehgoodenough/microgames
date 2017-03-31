@@ -27,18 +27,8 @@ class Bubble extends Pixi.Sprite {
         super(Pixi.Texture.fromImage(require("images/bubble.png")))
 
         this.interactive = true
-        this.on("mousedown", (event) => {
-            if(this.parent.hasEnded != true) {
-
-                if(this.parent.children.length <= 2) {
-                    this.parent.timer.duration = 0
-                    this.parent.hasEnded = true
-                    this.parent.state = "pass"
-                }
-
-                this.parent.removeChild(this)
-            }
-        })
+        this.on("mousedown", this.interact)
+        this.on("touchstart", this.interact)
 
         this.tint = Math.random() < 0.33 ? 0xDDFFFF : (Math.random() < 0.33 ? 0xFFDDFF : 0xFFFFDD)
 
@@ -65,6 +55,18 @@ class Bubble extends Pixi.Sprite {
             this.velocity.x *= -1
         } if(this.position.y >= Frame.height) {
             this.velocity.y *= -1
+        }
+    }
+    interact(event) {
+        if(this.parent.hasEnded != true) {
+
+            if(this.parent.children.length <= 2) {
+                this.parent.timer.duration = 0
+                this.parent.hasEnded = true
+                this.parent.state = "pass"
+            }
+
+            this.parent.removeChild(this)
         }
     }
 }

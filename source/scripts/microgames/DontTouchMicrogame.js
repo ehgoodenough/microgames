@@ -30,15 +30,8 @@ class Art extends Pixi.Sprite {
         super(Pixi.Texture.fromImage(image))
 
         this.interactive = true
-        this.on("mousedown", (event) => {
-            this.rotation = Math.PI / 12
-            this.state = "fail"
-
-            if(this.parent.hasEnded != true) {
-                this.parent.hasEnded = true
-                this.parent.timer.duration = 0
-            }
-        })
+        this.on("mousedown", this.interact)
+        this.on("touchstart", this.interact)
     }
     update(delta) {
         this.position.x = Frame.width / 2
@@ -50,6 +43,15 @@ class Art extends Pixi.Sprite {
             require("images/avacadoe.png"),
             require("images/pizzaladder.png"),
         ]
+    }
+    interact(event) {
+        this.rotation = Math.PI / 12
+        this.state = "fail"
+
+        if(this.parent.hasEnded != true) {
+            this.parent.hasEnded = true
+            this.parent.timer.duration = 0
+        }
     }
 }
 
