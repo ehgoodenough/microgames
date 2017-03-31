@@ -7,13 +7,11 @@ import DontTouchMicrogame from "scripts/microgames/DontTouchMicrogame.js"
 
 import Frame from "scripts/Frame.js"
 
-var MICROGAMES = [RunMicrogame]
-// MICROGAMES = Lodash.shuffle(MICROGAMES)
-// MICROGAMES = MICROGAMES.filter((microgame) => {
-//     return microgame.isPlayable
-// })
-
 const WAIT = 500
+var MICROGAMES = [
+    DontTouchMicrogame,
+    RunMicrogame
+]
 
 export default class Game extends Pixi.Container {
     constructor() {
@@ -22,7 +20,7 @@ export default class Game extends Pixi.Container {
         this.renderer = Pixi.autoDetectRenderer(Frame.width, Frame.height, {
             transparent: true
         })
-
+        
         this.startMicrogame()
     }
     update(delta) {
@@ -44,9 +42,19 @@ export default class Game extends Pixi.Container {
         if(this.microgame != undefined) {
             this.removeChild(this.microgame)
         }
-
-        this.microgame = new MICROGAMES[0]()
-        MICROGAMES.push(MICROGAMES.shift())
+        
+        if(this.microgames == null
+        || this.microgames.length == 0) {
+            this.microgames = MICROGAMES.slice()
+            // TODO: filter unplayable
+            // TODO: randomly shuffle
+            
+            this.stage = isNaN(this.stage) ? 0 : this.stage + 1
+        }
+        
+        var Microgame = this.microgames.shift()
+        
+        this.microgame = new Microgame(this.stage)
         this.addChild(this.microgame)
     }
 }

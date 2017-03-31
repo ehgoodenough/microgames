@@ -1,10 +1,9 @@
 import Pixi from "@ehgoodenough/pixi.js"
-
 import Microgame from "scripts/microgames/Microgame.js"
 import Frame from "scripts/Frame.js"
 
 export default class RunMicrogame extends Microgame {
-    constructor() {
+    constructor(stage = new Number()) {
         super()
         
         this.addChild(new Background1())
@@ -16,7 +15,7 @@ export default class RunMicrogame extends Microgame {
         this.addChild(new Floor({x: 550}))
         this.addChild(new Floor({x: 650}))
         
-        this.addChild(new Runner())
+        this.addChild(new Runner(stage))
     }
     timeout() {
         this.state = "pass"
@@ -78,10 +77,8 @@ class Floor extends Pixi.Sprite {
 }
 
 class Runner extends Pixi.Sprite {
-    constructor() {
+    constructor(stage = new Number()) {
         super(Pixi.Texture.fromImage(require("images/runner.png")))
-
-        this.speed = 0.1
         
         this.anchor.y = 1
         
