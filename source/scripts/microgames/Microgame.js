@@ -25,6 +25,15 @@ export default class Microgame extends Pixi.Container {
                 this.parent.prompt.position.x += 5 * delta.f
             }
         }
+        
+        if(this.music) {
+            if(this.music.volume < 1) {
+                this.music.volume += 0.05 * delta.f
+                if(this.music.volume > 1) {
+                    this.music.volume = 1
+                }
+            }
+        }
     }
 
     // A static method that indicates

@@ -12,12 +12,23 @@ export default class DontTouchMicrogame extends Microgame {
         this.addChild(new Art(stage))
 
         this.addChild(this.timer = new Timer())
+        
+        this.sounds = {
+            "no": new Audio(require("sounds/noooooOOOO.wav")),
+            "party": new Audio(require("sounds/party.mp3")),
+        }
     }
     timeout() {
         this.state = "pass"
 
         for(var i = 0; i < 100; i += 1) {
             this.addChild(new Confetti())
+        }
+        
+        if(this.sounds) {
+            this.sounds.party.currentTime = 0
+            this.sounds.party.volume = 0.5
+            this.sounds.party.play()
         }
     }
     get wait() {
@@ -51,6 +62,12 @@ class Art extends Pixi.Sprite {
         if(this.parent.hasEnded != true) {
             this.rotation = Math.PI / 12
             this.state = "fail"
+            
+            if(this.parent.sounds) {
+                this.parent.sounds.no.currentTime = 0
+                this.parent.sounds.no.volume = 0.5
+                this.parent.sounds.no.play()
+            }
         
             this.parent.hasEnded = true
             this.parent.timer.duration = 0
@@ -96,6 +113,6 @@ class Background extends Pixi.Sprite {
         this.scale.x = Frame.width
         this.scale.y = Frame.height
         
-        this.tint = 0xF8ECEC
+        this.tint = 0xAAAAAA
     }
 }

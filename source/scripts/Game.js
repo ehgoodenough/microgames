@@ -16,6 +16,18 @@ var MICROGAMES = [
     PopMicrogame,
 ]
 
+var music = null
+if(music == null) {
+    require(["music/Quirky Dog.mp3"], (source) => {
+        music = new Audio(source)
+        music.volume = 0.5
+        music.loop = true
+        music.play()
+    })
+} else {
+    music.play()
+}
+
 export default class Game extends Pixi.Container {
     constructor() {
         super()
@@ -66,6 +78,10 @@ export default class Game extends Pixi.Container {
             // TODO: randomly shuffle
 
             this.stage = isNaN(this.stage) ? 0 : this.stage + 1
+            
+            if(!!music) {
+                music.playbackRate = 1 + (this.stage * 0.5)
+            }
         }
 
         var Microgame = this.microgames.shift()
@@ -85,6 +101,9 @@ class Elevator extends Pixi.Sprite {
         this.isActive = false
         this.scale.x = 2.5
         this.scale.y = 2.5
+        // this.isActive = true
+        // this.scale.x = 1
+        // this.scale.y = 1
         
         this.speed = 0.05
         
@@ -135,6 +154,9 @@ class Elevator extends Pixi.Sprite {
                         }
                     }
                 } else {
+                    if(!!music) {
+                        music.volume = 0.25
+                    }
                     this.parent.microgame.timer.duration -= delta.ms
                     if(this.parent.microgame.timer.duration < -1 * this.parent.microgame.wait - 500) {
                         this.parent.startMicrogame()
@@ -147,7 +169,9 @@ class Elevator extends Pixi.Sprite {
             if(this.parent.prompt.position.x < Frame.width / 2) {
                 this.parent.prompt.position.x += 5 * delta.f
             }
-            
+            if(!!music) {
+                music.volume = 0.5
+            }
             if(this.parent.leftdoor.anchor.x != 1
             || this.parent.rightdoor.anchor.x != 0) {
                 if(this.parent.rightdoor.anchor.x > 0) {
