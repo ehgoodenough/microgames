@@ -2,7 +2,6 @@ import Pixi from "@ehgoodenough/pixi.js"
 Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST
 
 import RunMicrogame from "scripts/microgames/RunMicrogame.js"
-import CatchMicrogame from "scripts/microgames/CatchMicrogame.js"
 import DontTouchMicrogame from "scripts/microgames/DontTouchMicrogame.js"
 
 import Frame from "scripts/Frame.js"
@@ -20,14 +19,14 @@ export default class Game extends Pixi.Container {
         this.renderer = Pixi.autoDetectRenderer(Frame.width, Frame.height, {
             transparent: true
         })
-        
+
         this.startMicrogame()
     }
     update(delta) {
         if(this.microgame != undefined) {
 
             if(this.microgame.hasEnded) {
-                if(this.microgame.timer.duration <= -1 * WAIT) {
+                if(this.microgame.timer.duration <= -1 * (this.microgame.wait || WAIT)) {
                     this.startMicrogame()
                 }
             }
@@ -42,18 +41,18 @@ export default class Game extends Pixi.Container {
         if(this.microgame != undefined) {
             this.removeChild(this.microgame)
         }
-        
+
         if(this.microgames == null
         || this.microgames.length == 0) {
             this.microgames = MICROGAMES.slice()
             // TODO: filter unplayable
             // TODO: randomly shuffle
-            
+
             this.stage = isNaN(this.stage) ? 0 : this.stage + 1
         }
-        
+
         var Microgame = this.microgames.shift()
-        
+
         this.microgame = new Microgame(this.stage)
         this.addChild(this.microgame)
     }

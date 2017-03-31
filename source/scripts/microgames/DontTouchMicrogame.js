@@ -5,35 +5,75 @@ import Frame from "scripts/Frame.js"
 export default class DontTouchMicrogame extends Microgame {
     constructor(stage) {
         super()
-        
+
         this.addChild(new Art(stage))
     }
     timeout() {
         this.state = "pass"
+
+        for(var i = 0; i < 100; i += 1) {
+            this.addChild(new Confetti())
+        }
+    }
+    get wait() {
+        return 1000
     }
 }
 
-var ARTS = [
-    require("images/bananaman.png"),
-    require("images/avacadoe.png"),
-    require("images/pizzaladder.png"),
-]
-
 class Art extends Pixi.Sprite {
     constructor(stage = new Number()) {
-        super(Pixi.Texture.fromImage(ARTS[stage % ARTS.length]))
+        var image = Art.images[stage % Art.images.length]
+        super(Pixi.Texture.fromImage(image))
 
-        this.speed = 0.1
-        
         this.interactive = true
         this.on("mousedown", (event) => {
             this.rotation = Math.PI / 12
-            this.parent.timer.duration = 0
             this.state = "fail"
+
+            if(this.parent.hasEnded != true) {
+                this.parent.hasEnded = true
+                this.parent.timer.duration = 0
+            }
         })
     }
     update(delta) {
         this.position.x = Frame.width / 2
         this.position.y = Frame.height / 2
+    }
+    static get images() {
+        return [
+            require("images/bananaman.png"),
+            require("images/avacadoe.png"),
+            require("images/pizzaladder.png"),
+        ]
+    }
+}
+
+class Confetti extends Pixi.Sprite {
+    constructor() {
+        super(Pixi.Texture.fromImage(require("images/pixel.png")))
+
+        this.position.x = Math.random() * Frame.width
+        this.position.y = -5 * Math.random() - 3
+
+        this.scale.x = 3 * Math.random() + 1
+        this.scale.y = 3 * Math.random() + 1
+
+        this.speed = Math.random() * 20
+
+        this.tint = Confetti.colors[Math.floor(Math.random() * Confetti.colors.length)]
+    }
+    update(delta) {
+        this.position.y += this.speed * delta.f
+        this.rotation += Math.PI / 16
+
+        this.speed *= 0.9
+    }
+    static get colors() {
+        return [
+            0xCC0000,
+            0x00CC00,
+            0x0000CC,
+        ]
     }
 }
