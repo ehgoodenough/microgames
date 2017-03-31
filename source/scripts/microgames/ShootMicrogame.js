@@ -81,9 +81,6 @@ class Defender extends Pixi.Sprite {
     constructor(stage = new Number()) {
         super(Pixi.Texture.fromImage(require("images/defender.png")))
 
-        this.scale.x = 0.75
-        this.scale.y = 0.75
-
         this.position.x = Frame.width - 16
         this.position.y = Frame.height - 36
 
