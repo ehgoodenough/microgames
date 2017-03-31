@@ -7,7 +7,8 @@ import Timer from "scripts/Timer.js"
 export default class DontTouchMicrogame extends Microgame {
     constructor(stage) {
         super()
-
+        
+        this.addChild(new Background())
         this.addChild(new Art(stage))
 
         this.addChild(this.timer = new Timer())
@@ -81,5 +82,18 @@ class Confetti extends Pixi.Sprite {
             0x00CC00,
             0x0000CC,
         ]
+    }
+}
+
+class Background extends Pixi.Sprite {
+    constructor() {
+        super(Pixi.Texture.fromImage(require("images/pixel.png")))
+        
+        this.anchor.x = 0
+        this.anchor.y = 0
+        this.scale.x = Frame.width
+        this.scale.y = Frame.height
+        
+        this.tint = 0xF8ECEC
     }
 }
