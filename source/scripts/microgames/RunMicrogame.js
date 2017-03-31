@@ -1,20 +1,24 @@
 import Pixi from "@ehgoodenough/pixi.js"
-import Microgame from "scripts/microgames/Microgame.js"
+
 import Frame from "scripts/Frame.js"
+import Microgame from "scripts/microgames/Microgame.js"
+import Timer from "scripts/Timer.js"
 
 export default class RunMicrogame extends Microgame {
     constructor(stage = new Number()) {
         super()
 
-        this.addChildAt(new Background1(), 0)
-        this.addChildAt(new Background2(), 1)
-        this.addChildAt(new Floor({x: 0}), 2)
-        this.addChildAt(new Floor({x: 100}), 2)
-        this.addChildAt(new Floor({x: 250}), 2)
-        this.addChildAt(new Floor({x: 400}), 2)
-        this.addChildAt(new Floor({x: 550}), 2)
-        this.addChildAt(new Floor({x: 650}), 2)
-        this.addChildAt(new Runner(stage), 2)
+        this.addChild(new Background1())
+        this.addChild(new Background2())
+        this.addChild(new Floor({x: 0}))
+        this.addChild(new Floor({x: 100}))
+        this.addChild(new Floor({x: 250}))
+        this.addChild(new Floor({x: 400}))
+        this.addChild(new Floor({x: 550}))
+        this.addChild(new Floor({x: 650}))
+        this.addChild(new Runner(stage))
+
+        this.addChild(this.timer = new Timer())
     }
     timeout() {
         this.state = "pass"

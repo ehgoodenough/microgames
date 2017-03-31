@@ -1,12 +1,16 @@
 import Pixi from "@ehgoodenough/pixi.js"
-import Microgame from "scripts/microgames/Microgame.js"
+
 import Frame from "scripts/Frame.js"
+import Microgame from "scripts/microgames/Microgame.js"
+import Timer from "scripts/Timer.js"
 
 export default class DontTouchMicrogame extends Microgame {
     constructor(stage) {
         super()
 
         this.addChild(new Art(stage))
+
+        this.addChild(this.timer = new Timer())
     }
     timeout() {
         this.state = "pass"

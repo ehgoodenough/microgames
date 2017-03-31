@@ -1,6 +1,7 @@
 import Pixi from "@ehgoodenough/pixi.js"
-import Microgame from "scripts/microgames/Microgame.js"
+
 import Frame from "scripts/Frame.js"
+import Microgame from "scripts/microgames/Microgame.js"
 import Timer from "scripts/Timer.js"
 
 export default class ShootMicrogame extends Microgame {
@@ -10,7 +11,7 @@ export default class ShootMicrogame extends Microgame {
         this.addChild(new Background())
 
         for(var i = 0; i < 50; i += 1) {
-            this.addChild(new Star(i))
+            this.addChild(new Star(stage, i))
         }
 
         this.addChild(this.defender = new Defender(stage))
@@ -27,7 +28,7 @@ export default class ShootMicrogame extends Microgame {
         this.state = "fail"
     }
     get wait() {
-        return this.state == "pass" ? 2000 : 500
+        return this.state == "pass" ? 1500 : 500
     }
 }
 
@@ -89,7 +90,7 @@ class Defender extends Pixi.Sprite {
         this.recharging = 0
         this.maxrecharging = 500
 
-        this.speed = 1
+        this.speed = stage + 1
     }
     update(delta) {
         if(this.parent.hasEnded) {
@@ -176,7 +177,7 @@ class Projectile extends Pixi.Sprite {
 }
 
 class Star extends Pixi.Sprite {
-    constructor(index) {
+    constructor(stage, index) {
         super(Pixi.Texture.fromImage(require("images/pixel.png")))
 
         var color = Star.colors[Math.floor(Math.random() * Star.colors.length)]
@@ -188,7 +189,7 @@ class Star extends Pixi.Sprite {
         this.position.x = Math.random() * Frame.width
         this.position.y = Math.random() * Frame.height
 
-        this.speed = Math.random() * 2
+        this.speed = (Math.random() * 2) + stage
     }
     update(delta) {
         this.position.y += this.speed * delta.f
