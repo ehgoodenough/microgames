@@ -1,4 +1,5 @@
 import Pixi from "@ehgoodenough/pixi.js"
+import Frame from "scripts/Frame.js"
 
 export default class Microgame extends Pixi.Container {
     constructor() {
@@ -19,6 +20,10 @@ export default class Microgame extends Pixi.Container {
             if(child.update instanceof Function) {
                 child.update(delta)
             }
+        })
+        
+        this.children.sort(function(a, b) {
+            return (a.stack || 0) - (b.stack || 0)
         })
     }
 
@@ -54,9 +59,11 @@ class Timer extends Pixi.Sprite {
         this.anchor.x = 0
         this.anchor.y = 1
 
-        this.position.y = 160
-        this.scale.x = 90
+        this.position.y = Frame.height
+        this.scale.x = Frame.width
         this.scale.y = 4
+        
+        this.stack = 100
         
         this.duration = duration 
         this.maxduration = duration
@@ -75,10 +82,10 @@ class Timer extends Pixi.Sprite {
             // end the microgame.
             if(this.parent.hasEnded != true) {
                 this.parent.hasEnded = true
-                this.parent.end()
+                this.parent.timeout()
             }
         }
         
-        this.width = Math.max((this.duration / this.maxduration) * this.origin.renderer.width, 0)
+        this.width = Math.max((this.duration / this.maxduration) * Frame.width, 0)
     }
 }

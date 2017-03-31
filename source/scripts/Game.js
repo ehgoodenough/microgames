@@ -1,26 +1,25 @@
 import Pixi from "@ehgoodenough/pixi.js"
 Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST
 
+import RunMicrogame from "scripts/microgames/RunMicrogame.js"
+import CatchMicrogame from "scripts/microgames/CatchMicrogame.js"
 import DontTouchMicrogame from "scripts/microgames/DontTouchMicrogame.js"
 
-var MICROGAMES = [
-    DontTouchMicrogame
-]
+import Frame from "scripts/Frame.js"
 
+var MICROGAMES = [RunMicrogame]
 // MICROGAMES = Lodash.shuffle(MICROGAMES)
 // MICROGAMES = MICROGAMES.filter((microgame) => {
 //     return microgame.isPlayable
 // })
 
-const WIDTH = 90
-const HEIGHT = 160
 const WAIT = 500
 
 export default class Game extends Pixi.Container {
     constructor() {
         super()
 
-        this.renderer = Pixi.autoDetectRenderer(WIDTH, HEIGHT, {
+        this.renderer = Pixi.autoDetectRenderer(Frame.width, Frame.height, {
             transparent: true
         })
 
