@@ -7,13 +7,9 @@ import Timer from "scripts/Timer.js"
 export default class PopMicrogame extends Microgame {
     constructor(stage = new Number()) {
         super()
-        
+
         this.addChild(new Background())
-        
-        this.sounds = {
-            "pop": new Audio(require("sounds/bubblePop.wav"))
-        }
-        
+
         for(var i = 0; i < 5 * (stage + 1); i += 1) {
             this.addChild(new Bubble(stage))
         }
@@ -75,12 +71,6 @@ class Bubble extends Pixi.Sprite {
                 this.parent.state = "pass"
             }
 
-            if(this.parent.sounds) {
-                this.parent.sounds.pop.currentTime = 0
-                this.parent.sounds.pop.volume = 0.25
-                this.parent.sounds.pop.play()
-            }
-            
             this.parent.removeChild(this)
         }
     }
@@ -89,10 +79,10 @@ class Bubble extends Pixi.Sprite {
 class Background extends Pixi.Sprite {
     constructor() {
         super(Pixi.Texture.fromImage(require("images/bubble_bg.png")))
-        
+
         this.anchor.x = 0
         this.anchor.y = 0
-        
+
         this.tint = 0xAAAAAA
     }
 }

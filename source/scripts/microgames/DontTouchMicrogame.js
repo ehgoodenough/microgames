@@ -7,28 +7,17 @@ import Timer from "scripts/Timer.js"
 export default class DontTouchMicrogame extends Microgame {
     constructor(stage = new Number) {
         super()
-        
+
         this.addChild(new Background())
         this.addChild(new Art(stage))
 
         this.addChild(this.timer = new Timer((4 - stage) * 1000))
-        
-        this.sounds = {
-            "no": new Audio(require("sounds/noooooOOOO.wav")),
-            "party": new Audio(require("sounds/party.mp3")),
-        }
     }
     timeout() {
         this.state = "pass"
 
         for(var i = 0; i < 100; i += 1) {
             this.addChild(new Confetti())
-        }
-        
-        if(this.sounds) {
-            this.sounds.party.currentTime = 0
-            this.sounds.party.volume = 0.5
-            this.sounds.party.play()
         }
     }
     get wait() {
@@ -47,7 +36,7 @@ class Art extends Pixi.Sprite {
         this.interactive = true
         this.on("mousedown", this.interact)
         this.on("touchstart", this.interact)
-        
+
         this.position.x = Frame.width / 2
         this.position.y = Frame.height / 2
     }
@@ -62,13 +51,7 @@ class Art extends Pixi.Sprite {
         if(this.parent.hasEnded != true) {
             this.rotation = Math.PI / 12
             this.parent.state = "fail"
-            
-            if(this.parent.sounds) {
-                this.parent.sounds.no.currentTime = 0
-                this.parent.sounds.no.volume = 0.5
-                this.parent.sounds.no.play()
-            }
-        
+
             this.parent.hasEnded = true
             this.parent.timer.duration = 0
         }
@@ -107,12 +90,12 @@ class Confetti extends Pixi.Sprite {
 class Background extends Pixi.Sprite {
     constructor() {
         super(Pixi.Texture.fromImage(require("images/pixel.png")))
-        
+
         this.anchor.x = 0
         this.anchor.y = 0
         this.scale.x = Frame.width
         this.scale.y = Frame.height
-        
+
         this.tint = 0xAAAAAA
     }
 }

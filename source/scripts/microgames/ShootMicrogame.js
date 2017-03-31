@@ -23,12 +23,6 @@ export default class ShootMicrogame extends Microgame {
         this.addChild(this.timer = new Timer())
 
         this.score = 0
-        
-        this.sounds = {
-            "hit": new Audio(require("sounds/hitProjectile.wav")),
-            "shoot": new Audio(require("sounds/shootProjectile.wav")),
-            "vroom": new Audio(require("sounds/vroomKitten.wav")),
-        }
     }
     timeout() {
         this.state = "fail"
@@ -142,12 +136,6 @@ class Defender extends Pixi.Sprite {
                         y: this.position.y - (this.height / 2)
                     }
                 }))
-                if(this.parent.sounds) {
-                    this.parent.sounds.shoot.volume = 0.5
-                    this.parent.sounds.shoot.currentTime = 0
-                    this.parent.sounds.shoot.playbackRate = Math.random() + 1
-                    this.parent.sounds.shoot.play()
-                }
             }
         }
     }
@@ -179,18 +167,7 @@ class Projectile extends Pixi.Sprite {
                             this.parent.state = "pass"
                             this.parent.hasEnded = true
                             this.parent.timer.duration = 0
-                            
-                            if(this.parent.sounds) {
-                                this.parent.sounds.vroom.currentTime = 0
-                                this.parent.sounds.vroom.volume = 0.5
-                                this.parent.sounds.vroom.play()
-                            }
                         }
-                    }
-                    if(this.parent.sounds) {
-                        this.parent.sounds.hit.currentTime = 0
-                        this.parent.sounds.hit.volume = 0.5
-                        this.parent.sounds.hit.play()
                     }
 
                     this.parent.removeChild(child)
