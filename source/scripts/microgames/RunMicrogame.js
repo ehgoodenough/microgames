@@ -5,17 +5,16 @@ import Frame from "scripts/Frame.js"
 export default class RunMicrogame extends Microgame {
     constructor(stage = new Number()) {
         super()
-        
-        this.addChild(new Background1())
-        this.addChild(new Background2())
-        this.addChild(new Floor({x: 0}))
-        this.addChild(new Floor({x: 100}))
-        this.addChild(new Floor({x: 250}))
-        this.addChild(new Floor({x: 400}))
-        this.addChild(new Floor({x: 550}))
-        this.addChild(new Floor({x: 650}))
-        
-        this.addChild(new Runner(stage))
+
+        this.addChildAt(new Background1(), 0)
+        this.addChildAt(new Background2(), 1)
+        this.addChildAt(new Floor({x: 0}), 2)
+        this.addChildAt(new Floor({x: 100}), 2)
+        this.addChildAt(new Floor({x: 250}), 2)
+        this.addChildAt(new Floor({x: 400}), 2)
+        this.addChildAt(new Floor({x: 550}), 2)
+        this.addChildAt(new Floor({x: 650}), 2)
+        this.addChildAt(new Runner(stage), 2)
     }
     timeout() {
         this.state = "pass"
@@ -25,10 +24,10 @@ export default class RunMicrogame extends Microgame {
 class Background1 extends Pixi.Sprite {
     constructor() {
         super(Pixi.Texture.fromImage(require("images/run.background.1.png")))
-        
+
         this.anchor.x = 0
         this.anchor.y = 0
-        
+
         this.interactive = true
         this.on("mousedown", (event) => {
             this.parent.children.forEach((child) => {
@@ -43,10 +42,10 @@ class Background1 extends Pixi.Sprite {
 class Background2 extends Pixi.Sprite {
     constructor() {
         super(Pixi.Texture.fromImage(require("images/run.background.2.png")))
-        
+
         this.anchor.x = 0
         this.anchor.y = 0
-        
+
         this.speed = 0.33
     }
     update(delta) {
@@ -59,13 +58,13 @@ class Background2 extends Pixi.Sprite {
 class Floor extends Pixi.Sprite {
     constructor(that) {
         super(Pixi.Texture.fromImage(require("images/run.floor.png")))
-        
+
         this.anchor.x = 0
         this.anchor.y = 1
-        
+
         this.position.x = that.x || 0
         this.position.y = Frame.height
-        
+
         this.speed = that.speed || 2
         this.isPermeable = true
     }
@@ -79,19 +78,19 @@ class Floor extends Pixi.Sprite {
 class Runner extends Pixi.Sprite {
     constructor(stage = new Number()) {
         super(Pixi.Texture.fromImage(require("images/runner.png")))
-        
+
         this.anchor.y = 1
-        
+
         this.position.x = Frame.width / 3
         this.position.y = Frame.height * (2/3)
-        
+
         this.velocity = new Pixi.Point()
         this.gravity = 0.5
     }
     update(delta) {
-        
+
         this.velocity.y += this.gravity * delta.f
-        
+
         this.parent.children.forEach((child) => {
             if(child.isPermeable) {
                 if(child.position.x < this.position.x + this.velocity.x
@@ -105,13 +104,13 @@ class Runner extends Pixi.Sprite {
                 }
             }
         })
-        
+
         this.position.x += this.velocity.x * delta.f
         this.position.y += this.velocity.y * delta.f
-        
+
         if(this.position.y > Frame.height + this.height) {
             this.state = "fail"
-            
+
             if(this.parent.hasEnded != true) {
                 this.parent.hasEnded = true
                 this.parent.timer.duration = 0

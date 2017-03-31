@@ -4,7 +4,7 @@ import Frame from "scripts/Frame.js"
 export default class Microgame extends Pixi.Container {
     constructor() {
         super(null)
-        
+
         this.addChild(this.timer = new Timer())
     }
 
@@ -20,10 +20,6 @@ export default class Microgame extends Pixi.Container {
             if(child.update instanceof Function) {
                 child.update(delta)
             }
-        })
-        
-        this.children.sort(function(a, b) {
-            return (a.stack || 0) - (b.stack || 0)
         })
     }
 
@@ -62,10 +58,10 @@ class Timer extends Pixi.Sprite {
         this.position.y = Frame.height
         this.scale.x = Frame.width
         this.scale.y = 4
-        
+
         this.stack = 100
-        
-        this.duration = duration 
+
+        this.duration = duration
         this.maxduration = duration
     }
     static get image() {
@@ -85,7 +81,7 @@ class Timer extends Pixi.Sprite {
                 this.parent.timeout()
             }
         }
-        
+
         this.width = Math.max((this.duration / this.maxduration) * Frame.width, 0)
     }
 }

@@ -2,14 +2,16 @@ import Pixi from "@ehgoodenough/pixi.js"
 Pixi.settings.SCALE_MODE = Pixi.SCALE_MODES.NEAREST
 
 import RunMicrogame from "scripts/microgames/RunMicrogame.js"
+import ShootMicrogame from "scripts/microgames/ShootMicrogame.js"
 import DontTouchMicrogame from "scripts/microgames/DontTouchMicrogame.js"
 
 import Frame from "scripts/Frame.js"
 
 const WAIT = 500
 var MICROGAMES = [
-    DontTouchMicrogame,
-    RunMicrogame
+    // DontTouchMicrogame,
+    // RunMicrogame
+    ShootMicrogame
 ]
 
 export default class Game extends Pixi.Container {
