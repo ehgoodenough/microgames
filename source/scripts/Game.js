@@ -20,7 +20,7 @@ var music = null
 if(music == null) {
     require(["music/Quirky Dog.mp3"], (source) => {
         music = new Audio(source)
-        music.volume = STAGE == "DEVELOPMENT" ? 0 : 0.25
+        music.volume = 0.25
         music.loop = true
         music.play()
     })
@@ -63,6 +63,8 @@ export default class Game extends Pixi.Container {
         this.rightdoor.position.x = Frame.width
         this.rightdoor.tint = 0xEEEEEE
         
+        this.hearts = 3
+        
         this.startMicrogame()
     }
     update(delta) {
@@ -96,6 +98,14 @@ export default class Game extends Pixi.Container {
 
         this.microgame = new Microgame(this.stage)
         this.addChildAt(this.microgame, 0)
+    }
+}
+
+class Heart extends Pixi.Sprite {
+    constructor(index) {
+        super(Pixi.Texture.fromImage("images/heart.png"))
+        
+        
     }
 }
 
@@ -164,14 +174,17 @@ class Elevator extends Pixi.Sprite {
                         }
                     }
                 } else {
-                    if(!!music) {
-                        // music.volume = 0.25
-                    }
+                    var state = this.parent.microgame.state
+                    
+                    
                     this.parent.microgame.timer.duration -= delta.ms
-                    if(this.parent.microgames.length == 0) {
+                    
+                    var isGameOver = (state == "fail") && this.hearts == 1
+                    
+                    if(this.parent.microgames.length == 0 || isGameOver) {
                         
-                        if(this.parent.stage >= 2) {
-                            this.parent.faster.text = "YOU WIN!! :D"
+                        if(this.parent.stage >= 2 || isGameOver) {
+                            this.parent.faster.text = isGameOver ? "YOU LOST :<" : "YOU WIN!! :D"
                             this.parent.microgame.timer.duration = -1 * this.parent.microgame.wait
                             if(!!music) {
                                 music.playbackRate = 1
@@ -190,6 +203,15 @@ class Elevator extends Pixi.Sprite {
                     
                     var extrawait = this.parent.microgames.length == 0 ? 2000 : 500
                     if(this.parent.microgame.timer.duration < -1 * this.parent.microgame.wait - extrawait) {
+                        
+                        if(state == "fail") {
+                            this.parent.hearts -= 1
+                            console.log(this.parent.hearts)
+                            if(this.parent.hearts <= 0) {
+                                window.location = window.location
+                            }
+                        }
+                        
                         this.parent.startMicrogame()
                         this.parent.prompt.text = (this.parent.microgame.prompt || "Do It").toUpperCase()
                         this.parent.prompt.position.x = 0 - (this.parent.prompt.width / 2)
