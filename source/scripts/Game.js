@@ -9,9 +9,9 @@ import Frame from "scripts/Frame.js"
 
 const WAIT = 500
 var MICROGAMES = [
-    ShootMicrogame,
+    // ShootMicrogame,
     // DontTouchMicrogame,
-    // RunMicrogame,
+    RunMicrogame,
 ]
 
 export default class Game extends Pixi.Container {

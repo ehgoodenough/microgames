@@ -81,7 +81,12 @@ class Floor extends Pixi.Sprite {
 
 class Runner extends Pixi.Sprite {
     constructor(stage = new Number()) {
-        super(Pixi.Texture.fromImage(require("images/runner.png")))
+        super(Pixi.Texture.fromImage(require("images/runner.1.png")))
+
+        this.textures = [
+            Pixi.Texture.fromImage(require("images/runner.1.png")),
+            Pixi.Texture.fromImage(require("images/runner.2.png")),
+        ]
 
         this.anchor.y = 1
 
@@ -90,6 +95,8 @@ class Runner extends Pixi.Sprite {
 
         this.velocity = new Pixi.Point()
         this.gravity = 0.5
+
+        this.animation = 0
     }
     update(delta) {
 
@@ -119,6 +126,11 @@ class Runner extends Pixi.Sprite {
                 this.parent.hasEnded = true
                 this.parent.timer.duration = 0
             }
+        }
+
+        if(this.velocity.y == 0 && this.position.y == Math.round(Frame.height * (2/3))) {
+            this.animation += delta.ms
+            this.texture = this.textures[Math.floor(this.animation / 100) % 2]
         }
     }
     send(message) {
