@@ -19,6 +19,12 @@ export default class Microgame extends Pixi.Container {
                 child.update(delta)
             }
         })
+        
+        if(!!this.parent.prompt) {
+            if(this.parent.prompt.position.x < Frame.width + this.parent.prompt.width / 2) {
+                this.parent.prompt.position.x += 5 * delta.f
+            }
+        }
     }
 
     // A static method that indicates

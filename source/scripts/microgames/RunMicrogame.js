@@ -23,6 +23,9 @@ export default class RunMicrogame extends Microgame {
     timeout() {
         this.state = "pass"
     }
+    get prompt() {
+        return "RUN N'\nJUMP"
+    }
 }
 
 class Background1 extends Pixi.Sprite {

@@ -7,6 +7,8 @@ import Timer from "scripts/Timer.js"
 export default class PopMicrogame extends Microgame {
     constructor(stage = new Number()) {
         super()
+        
+        this.addChild(new Background())
 
         for(var i = 0; i < 5 * (stage + 1); i += 1) {
             this.addChild(new Bubble(stage))
@@ -19,6 +21,9 @@ export default class PopMicrogame extends Microgame {
     }
     get wait() {
         return 500
+    }
+    get prompt() {
+        return "POP\nPOP"
     }
 }
 
@@ -45,7 +50,7 @@ class Bubble extends Pixi.Sprite {
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
-        this.rotation += Math.PI / 32
+        // this.rotation += Math.PI / 32
 
         if(this.position.x <= 0) {
             this.velocity.x *= -1
@@ -60,7 +65,7 @@ class Bubble extends Pixi.Sprite {
     interact(event) {
         if(this.parent.hasEnded != true) {
 
-            if(this.parent.children.length <= 2) {
+            if(this.parent.children.length <= 3) {
                 this.parent.timer.duration = 0
                 this.parent.hasEnded = true
                 this.parent.state = "pass"
@@ -68,5 +73,16 @@ class Bubble extends Pixi.Sprite {
 
             this.parent.removeChild(this)
         }
+    }
+}
+
+class Background extends Pixi.Sprite {
+    constructor() {
+        super(Pixi.Texture.fromImage(require("images/bubble_bg.png")))
+        
+        this.anchor.x = 0
+        this.anchor.y = 0
+        
+        this.tint = 0xAAAAAA
     }
 }

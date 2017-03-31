@@ -1,5 +1,10 @@
 @import "./styles/Frame.css";
 
+@font-face {
+    font-family: "MuseoSans";
+    src: url("http://d3rqdbvvokrlbl.cloudfront.net/lib/fonts/museosans/museosans500.woff") format("woff");
+}
+
 * {
     cursor: default;
     user-select: none;

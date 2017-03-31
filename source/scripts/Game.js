@@ -7,12 +7,13 @@ import DontTouchMicrogame from "scripts/microgames/DontTouchMicrogame.js"
 import PopMicrogame from "scripts/microgames/PopMicrogame.js"
 
 import Frame from "scripts/Frame.js"
+const WOOT_GREEN = 0x66963F
 
 var MICROGAMES = [
     DontTouchMicrogame,
-    // RunMicrogame,
-    // ShootMicrogame,
-    // PopMicrogame,
+    RunMicrogame,
+    ShootMicrogame,
+    PopMicrogame,
 ]
 
 export default class Game extends Pixi.Container {
@@ -26,6 +27,13 @@ export default class Game extends Pixi.Container {
         this.addChild(this.leftdoor = new ElevatorDoor())
         this.addChild(this.rightdoor = new ElevatorDoor())
         this.addChild(this.elevator = new Elevator())
+        
+        this.addChild(this.prompt = new Pixi.Text("DON'T\nTOUCH", {
+            "fontFamily": "Arial", "fontSize": "30px", "fontWeight": "bold",
+            "align": "center", "fill": WOOT_GREEN, "stroke": 0x111111, "strokeThickness": 5
+        }))
+        this.prompt.position.x = Frame.width / 2
+        this.prompt.position.y = Frame.height / 2
         
         this.leftdoor.anchor.x = 1
         this.leftdoor.position.x = 0
@@ -75,12 +83,22 @@ class Elevator extends Pixi.Sprite {
         this.position.y = Frame.height / 2
         
         this.isActive = false
-        this.scale.x = 2
-        this.scale.y = 2
+        this.scale.x = 2.5
+        this.scale.y = 2.5
         
         this.speed = 0.05
+        
+        this.animation = 0
+        
+        this.textures = [
+            Pixi.Texture.fromImage(require("images/elevator.outer.1.png")),
+            Pixi.Texture.fromImage(require("images/elevator.outer.2.png")),
+        ]
     }
     update(delta) {
+        this.animation += delta.ms
+        this.texture = this.textures[Math.floor(this.animation / 300) % 2]
+        
         if(this.parent.microgame.isDone) {
             this.isActive = true
             if(this.scale.x != 1
@@ -120,10 +138,16 @@ class Elevator extends Pixi.Sprite {
                     this.parent.microgame.timer.duration -= delta.ms
                     if(this.parent.microgame.timer.duration < -1 * this.parent.microgame.wait - 500) {
                         this.parent.startMicrogame()
+                        this.parent.prompt.text = (this.parent.microgame.prompt || "Do It").toUpperCase()
+                        this.parent.prompt.position.x = 0 - (this.parent.prompt.width / 2)
                     }
                 }
             }
         } else {
+            if(this.parent.prompt.position.x < Frame.width / 2) {
+                this.parent.prompt.position.x += 5 * delta.f
+            }
+            
             if(this.parent.leftdoor.anchor.x != 1
             || this.parent.rightdoor.anchor.x != 0) {
                 if(this.parent.rightdoor.anchor.x > 0) {
@@ -139,18 +163,18 @@ class Elevator extends Pixi.Sprite {
                     }
                 }
             } else {
-                if(this.scale.x != 2
-                || this.scale.y != 2) {
-                    if(this.scale.x < 2) {
+                if(this.scale.x != 2.5
+                || this.scale.y != 2.5) {
+                    if(this.scale.x < 2.5) {
                         this.scale.x += this.speed * delta.f
-                        if(this.scale.x > 2) {
-                            this.scale.x = 2
+                        if(this.scale.x > 2.5) {
+                            this.scale.x = 2.5
                         }
                     }
-                    if(this.scale.y < 2) {
+                    if(this.scale.y < 2.5) {
                         this.scale.y += this.speed * delta.f
-                        if(this.scale.y > 2) {
-                            this.scale.y = 2
+                        if(this.scale.y > 2.5) {
+                            this.scale.y = 2.5
                         }
                     }
                 } else {
@@ -164,7 +188,6 @@ class Elevator extends Pixi.Sprite {
 class ElevatorDoor extends Pixi.Sprite {
     constructor() {
         super(Pixi.Texture.fromImage(require("images/pixel.png")))
-        console.log(Frame)
         this.scale.x = Frame.width / 2
         this.scale.y = Frame.height
         

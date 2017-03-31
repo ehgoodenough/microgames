@@ -30,6 +30,9 @@ export default class ShootMicrogame extends Microgame {
     get wait() {
         return this.state == "pass" ? 1500 : 500
     }
+    get prompt() {
+        return "SHOOT\nEM UP"
+    }
 }
 
 class Background extends Pixi.Sprite {

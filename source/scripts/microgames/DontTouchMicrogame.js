@@ -23,6 +23,9 @@ export default class DontTouchMicrogame extends Microgame {
     get wait() {
         return 1000
     }
+    get prompt() {
+        return "Don't\nTouch"
+    }
 }
 
 class Art extends Pixi.Sprite {
