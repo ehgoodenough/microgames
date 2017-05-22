@@ -6,7 +6,7 @@ import Timer from "scripts/Timer.js"
 
 export default class PopMicrogame extends Microgame {
     constructor(stage = new Number()) {
-        super()
+        super(stage)
 
         this.addChild(new Background())
 
@@ -16,14 +16,19 @@ export default class PopMicrogame extends Microgame {
 
         this.addChild(this.timer = new Timer(10000))
     }
-    timeout() {
-        this.state = "fail"
-    }
     get wait() {
         return 500
     }
     get prompt() {
         return "POP\nPOP"
+    }
+    timeout() {
+        this.state = "fail"
+    }
+    get bubbles() {
+        return this.children.reduce(function(value, child) {
+            return value + (child instanceof Bubble ? 1 : 0)
+        }, 0)
     }
 }
 
@@ -32,46 +37,45 @@ class Bubble extends Pixi.Sprite {
         super(Pixi.Texture.fromImage(require("images/bubble.png")))
 
         this.interactive = true
-        this.on("mousedown", this.interact)
-        this.on("touchstart", this.interact)
+        this.on("pointerdown", this.interact)
 
         this.tint = Math.random() < 0.33 ? 0xDDFFFF : (Math.random() < 0.33 ? 0xFFDDFF : 0xFFFFDD)
 
-        this.position.x = Math.random() * Frame.width
-        this.position.y = Math.random() * Frame.height
+        this.position.x = (Math.random() < 0.5) ? (Math.random() * (this.width) * -1) : (Frame.width + (Math.random() * (this.width)))
+        this.position.y = (Math.random() < 0.5) ? (Math.random() * (this.height) * -1) : (Frame.height + (Math.random() * (this.height)))
 
         this.velocity = new Pixi.Point()
-        this.velocity.x = (Math.random() * 0.25 + 0.25) * (Math.random() < 0.5 ? -1 : +1)
-        this.velocity.y = (Math.random() * 0.25 + 0.25) * (Math.random() < 0.5 ? -1 : +1)
+        this.velocity.x = (Math.random() * 0.35 + 0.15) * (Math.random() < 0.5 ? -1 : +1)
+        this.velocity.y = (Math.random() * 0.35 + 0.15) * (Math.random() < 0.5 ? -1 : +1)
 
         this.scale.x = this.scale.y = Math.random() * 0.5 + 0.5
     }
     update(delta) {
+        // Translate the bubles via
+        // their randomized velocity.
         this.position.x += this.velocity.x
         this.position.y += this.velocity.y
 
-        // this.rotation += Math.PI / 32
-
-        if(this.position.x <= 0) {
+        // Bounce the bubbles off the sides of the screen.
+        if(this.velocity.x < 0 && this.position.x <= 0) {
             this.velocity.x *= -1
-        } if(this.position.y <= 0) {
+        } if(this.velocity.y < 0 && this.position.y <= 0) {
             this.velocity.y *= -1
-        } if(this.position.x >= Frame.width) {
+        } if(this.velocity.x > 0 && this.position.x >= Frame.width) {
             this.velocity.x *= -1
-        } if(this.position.y >= Frame.height) {
+        } if(this.velocity.y > 0 && this.position.y >= Frame.height) {
             this.velocity.y *= -1
         }
     }
     interact(event) {
-        if(this.parent.hasEnded != true) {
-
-            if(this.parent.children.length <= 3) {
-                this.parent.timer.duration = 0
-                this.parent.hasEnded = true
-                this.parent.state = "pass"
+        this.microgame = this.parent
+        if(this.microgame.hasEnded != true) {
+            this.microgame.removeChild(this)
+            if(this.microgame.bubbles == 0) {
+                this.microgame.timer.duration = 0
+                this.microgame.hasEnded = true
+                this.microgame.state = "pass"
             }
-
-            this.parent.removeChild(this)
         }
     }
 }
@@ -79,10 +83,8 @@ class Bubble extends Pixi.Sprite {
 class Background extends Pixi.Sprite {
     constructor() {
         super(Pixi.Texture.fromImage(require("images/bubble_bg.png")))
-
+        this.tint = 0x999999
         this.anchor.x = 0
         this.anchor.y = 0
-
-        this.tint = 0xAAAAAA
     }
 }

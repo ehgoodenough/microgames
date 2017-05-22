@@ -2,8 +2,10 @@ import Pixi from "@ehgoodenough/pixi.js"
 import Frame from "scripts/Frame.js"
 
 export default class Microgame extends Pixi.Container {
-    constructor() {
+    constructor(stage) {
         super(null)
+
+        this.stage = stage
     }
 
     // A method that is called
@@ -19,13 +21,13 @@ export default class Microgame extends Pixi.Container {
                 child.update(delta)
             }
         })
-        
+
         if(!!this.parent.prompt) {
             if(this.parent.prompt.position.x < Frame.width + this.parent.prompt.width / 2) {
                 this.parent.prompt.position.x += 5 * delta.f
             }
         }
-        
+
         if(this.music) {
             if(this.music.volume < 1) {
                 this.music.volume += 0.05 * delta.f
@@ -59,11 +61,11 @@ export default class Microgame extends Pixi.Container {
     end() {
         return
     }
-    
+
     get isDone() {
         return this.timer.duration <= -1 * this.wait
     }
-    
+
     get wait() {
         return 500
     }
