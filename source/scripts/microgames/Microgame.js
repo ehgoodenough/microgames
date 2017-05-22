@@ -4,8 +4,6 @@ import Frame from "scripts/Frame.js"
 export default class Microgame extends Pixi.Container {
     constructor(stage) {
         super(null)
-
-        this.stage = stage
     }
 
     // A method that is called

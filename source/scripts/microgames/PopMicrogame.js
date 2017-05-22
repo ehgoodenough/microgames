@@ -5,19 +5,16 @@ import Microgame from "scripts/microgames/Microgame.js"
 import Timer from "scripts/Timer.js"
 
 export default class PopMicrogame extends Microgame {
-    constructor(stage = new Number()) {
-        super(stage)
+    constructor(bubbles = new Number()) {
+        super()
 
         this.addChild(new Background())
 
-        for(var i = 0; i < 5 * (stage + 1); i += 1) {
-            this.addChild(new Bubble(stage))
+        for(var i = 0; i < bubbles; i += 1) {
+            this.addChild(new Bubble())
         }
 
         this.addChild(this.timer = new Timer(10000))
-    }
-    get wait() {
-        return 500
     }
     get prompt() {
         return "POP\nPOP"
@@ -71,6 +68,7 @@ class Bubble extends Pixi.Sprite {
         this.microgame = this.parent
         if(this.microgame.hasEnded != true) {
             this.microgame.removeChild(this)
+            this.microgame.parent.score.text++
             if(this.microgame.bubbles == 0) {
                 this.microgame.timer.duration = 0
                 this.microgame.hasEnded = true

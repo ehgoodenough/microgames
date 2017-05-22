@@ -10,7 +10,7 @@ export default class Timer extends Pixi.Sprite {
 
         this.position.y = Frame.height
         this.scale.x = Frame.width
-        this.scale.y = 4
+        this.scale.y = 10
 
         this.stack = 100
 
